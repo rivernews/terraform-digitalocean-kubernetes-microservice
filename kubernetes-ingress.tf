@@ -50,6 +50,9 @@ resource "kubernetes_ingress" "app" {
     tls {
     #   hosts       = var.tls_cert_covered_domain_list
       hosts       = local.deployed_domain_list
+
+      # not specifying a secret name will let the k8 cluster's ingress controller 
+      # use default-ssl-certificate, if it is configured
     #   secret_name = var.cert_cluster_issuer_k8_secret_name
     }
 

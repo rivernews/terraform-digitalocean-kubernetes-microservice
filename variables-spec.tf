@@ -30,14 +30,6 @@ variable "cors_domain_whitelist" {
     type = list
 }
 
-variable "cert_cluster_issuer_name" {
-  description = "The issuer name of TLS certificate, cluster-wise"
-}
-
-variable "cert_cluster_issuer_k8_secret_name" {
-  description = "..."
-}
-
 variable "kubernetes_cron_jobs" {
     default = []
     type = list
