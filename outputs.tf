@@ -21,8 +21,7 @@ output "microservice_kubernetes_service_port" {
 }
 
 output "microservice_namespace" {
-  #   value = "${kubernetes_service_account.app.metadata.0.namespace}"
-  value = "cert-manager"
+  value = "${kubernetes_service_account.app.metadata.0.namespace}"
 }
 
 output "microservice_runtime_env_vars" {

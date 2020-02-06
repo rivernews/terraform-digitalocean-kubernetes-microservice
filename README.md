@@ -11,7 +11,7 @@ This module currently assumes the use of Digitalocean Kubernetes Service. Howeve
 Regradless of which Kubernetes vendor you use, this terraform module assumes you provisioned a Kubernetes cluster already - so this means that you are required to have an existing K8 cluster, or at least terraform scripts that provision them. If you're not using digitalocean as your K8 cluster provider and using other kubernetes cluster vendor, you will modify `kubernetes-cluster.tf`, so that `local_file.kubeconfig` will generate the right `kubeconfig.yaml`.
 
 ### AWS - credential management using AWS parameter store
-This module assumes you use AWS parameter store. As such, you will have to provide your AWS account credentials through the three variable inputs: 
+This module assumes you use AWS parameter store for credential management. As such, you will have to provide your AWS account credentials through the three variable inputs: 
 
 ```
 variable "aws_access_key" {}
@@ -19,7 +19,7 @@ variable "aws_secret_key" {}
 variable "aws_region" {}
 ```
 
-This module assumes you have created the following credentials created in your AWS parameter store. You may go into your AWS portal and create the following keys and their values:
+This module assumes you have the following credentials created in your AWS parameter store. You may go into your AWS portal and create the following keys and their values:
 ```terraform
 variable "aws_ssm_parameter__digitalocean_token" {
   default     = "/provider/digitalocean/TOKEN" # the key you store your credential in AWS parameter store
@@ -44,7 +44,7 @@ variable "aws_ssm_parameter__docker_password" {
 ```
 
 ### Ingress controller and externalDns resource running on your K8
-Lastly, if your microservice needs to be exposed to external traffic & be assigned a domain name, this module assumes your cluster already have ingress controller and externalDns resource configured. **Particularly, your ingress controller has a `default-ssl-certificate` configured w/ wildcard certificate**, which can be used to deploy microservice to your desired subdomain (covered by the wildcard certificate). You can specify your desired domain name for the microservice by variable `app_deployed_domain`. If your microservice does not need to be accessed outside from the cluster, then an ingress controller is not required. You can omit the variable `app_deployed_domain` in such case.
+Lastly, if your microservice needs to be exposed to external traffic & be assigned a domain name, this module assumes your cluster already have ingress controller and externalDns resource configured. **Particularly, your ingress controller has a `default-ssl-certificate` configured w/ wildcard certificate**, which can be used to deploy microservice to your desired subdomain (covered by the wildcard certificate). You can specify your desired domain name for the microservice by variable `app_deployed_domain`. If your microservice does not need to be accessed outside from the cluster, then ingress controller and externalDns are not required. You can ignore the variable `app_deployed_domain` in such case.
 
 ## How to use
 
@@ -53,7 +53,8 @@ An example of using this terraform module:
 ```terraform
 
 module "slack_middleware_service" {
-  source = "github.com/rivernews/microservice-on-kubernetes"
+  source  = "rivernews/kubernetes-microservice/digitalocean"
+  version = "0.0.1"
   
   # credential management
   aws_region     = "${You will have to provide this}"
@@ -126,3 +127,7 @@ module "slack_middleware_service" {
 }
 
 ```
+
+## Reference
+
+This repository is also [published on the Terraform Registry](https://registry.terraform.io/modules/rivernews/kubernetes-microservice/).
