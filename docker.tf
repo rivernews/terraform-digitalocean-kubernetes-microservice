@@ -1,13 +1,13 @@
 data "aws_ssm_parameter" "docker_email" {
-  name = "/provider/dockerhub/DOCKERHUB_EMAIL"
+  name = var.aws_ssm_parameter__docker_email
 }
 
 data "aws_ssm_parameter" "docker_username" {
-  name = "/provider/dockerhub/DOCKERHUB_USERNAME"
+  name = var.aws_ssm_parameter__docker_username
 }
 
 data "aws_ssm_parameter" "docker_password" {
-  name = "/provider/dockerhub/DOCKERHUB_PASSWORD"
+  name = var.aws_ssm_parameter__docker_password
 }
 
 locals {
