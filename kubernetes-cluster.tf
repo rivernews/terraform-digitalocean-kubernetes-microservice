@@ -19,5 +19,6 @@ provider "local" {
 
 resource "local_file" "kubeconfig" {
     sensitive_content     = data.digitalocean_kubernetes_cluster.for_app.kube_config.0.raw_config
-    filename = "${path.module}/kubeconfig.yaml"
+    # filename = "${path.module}/kubeconfig.yaml"
+    filename = "kubeconfig.yaml"
 }
