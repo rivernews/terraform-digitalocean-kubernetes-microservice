@@ -54,7 +54,7 @@ An example of using this terraform module:
 
 module "slack_middleware_service" {
   source  = "rivernews/kubernetes-microservice/digitalocean"
-  version = "0.0.1"
+  version = "0.0.2"
   
   # credential management
   aws_region     = "${You will have to provide this}"
