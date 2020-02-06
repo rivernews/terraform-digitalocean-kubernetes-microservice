@@ -128,6 +128,23 @@ module "slack_middleware_service" {
 
 ```
 
+## Publishing a terraform registry module
+
+- Name the repository in github as `terraform-<PROVIDER>-<NAME>`
+- Make a release via github UI, or tag it through git command (see below)
+- Go on terraform registry website to sign up with your github account, and choose the repository
+- (optional) Have `main.tf`, `variables.tf` and `output.tf` in root
+- (optional) Provide descriptions for variables and outputs
+
+[According to this medium psot](https://blog.gruntwork.io/how-to-create-reusable-infrastructure-with-terraform-modules-25526d65f73d):
+
+```
+$ git commit ...
+$ git push origin master
+$ git tag -a "v0.0.1" -m "First release of webserver-cluster module"
+$ git push --follow-tags
+```
+
 ## Reference
 
 This repository is also [published on the Terraform Registry](https://registry.terraform.io/modules/rivernews/kubernetes-microservice/).
