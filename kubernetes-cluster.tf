@@ -3,7 +3,7 @@ data "aws_ssm_parameter" "digitalocean_token" {
 }
 
 provider "digitalocean" {
-  token   = var.aws_ssm_parameter__digitalocean_token
+  token   = data.aws_ssm_parameter.digitalocean_token.value
 
   # version changelog: https://github.com/terraform-providers/terraform-provider-digitalocean/blob/master/CHANGELOG.md
   version = "~> 1.11"
