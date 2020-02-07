@@ -26,7 +26,7 @@ resource "local_file" "kubeconfig" {
 
 provider "kubernetes" {
   # all k8 provider versions: https://github.com/terraform-providers/terraform-provider-kubernetes/blob/master/CHANGELOG.md
-  version = "~> 1.10"
+  version = "~> 1.9"
 
   host = data.digitalocean_kubernetes_cluster.for_app.endpoint
 
