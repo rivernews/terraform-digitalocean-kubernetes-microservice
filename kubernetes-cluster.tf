@@ -25,6 +25,11 @@ resource "local_file" "kubeconfig" {
 
 
 provider "kubernetes" {
+  # Resolve Error: Unauthorized issue
+  # suggested config: https://stackoverflow.com/a/58955100/9814131
+  # suggested cli: https://github.com/terraform-providers/terraform-provider-kubernetes/issues/679#issuecomment-552119320
+  # related merge request: https://github.com/terraform-providers/terraform-provider-kubernetes/pull/690
+
   # all k8 provider versions: https://github.com/terraform-providers/terraform-provider-kubernetes/blob/master/CHANGELOG.md
   version = "1.9"
 
@@ -33,7 +38,7 @@ provider "kubernetes" {
   load_config_file = false
 
   token = data.digitalocean_kubernetes_cluster.for_app.kube_config[0].token
-  
+
   cluster_ca_certificate = base64decode(
     data.digitalocean_kubernetes_cluster.for_app.kube_config[0].cluster_ca_certificate
   )
