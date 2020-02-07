@@ -1,5 +1,5 @@
 terraform {
     required_providers {
-        kubernetes = "~> 1.9"
+        kubernetes = "1.9"
     }
 }
