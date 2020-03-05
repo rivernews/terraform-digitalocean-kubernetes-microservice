@@ -31,6 +31,11 @@ resource "kubernetes_cron_job" "simple_cmd_job" {
           metadata {}
 
           spec {
+
+            image_pull_secrets {
+              name = kubernetes_secret.dockerhub_secret.metadata.0.name
+            }
+
             container {
               name    = "${var.app_label}-${var.kubernetes_cron_jobs[count.index]["name"]}-cronjob-container"
               image   = lower(trimspace("${var.app_container_image}:${var.app_container_image_tag}"))
