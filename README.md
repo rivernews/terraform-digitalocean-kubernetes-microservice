@@ -141,6 +141,8 @@ module "slack_middleware_service" {
 ```
 $ git commit ...
 $ git push origin master
+
+# note: version convention is having a `v` prefix!
 $ git tag -a "v0.0.1" -m "First release of webserver-cluster module"
 $ git push --follow-tags
 ```
