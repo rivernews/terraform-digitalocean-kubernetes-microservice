@@ -12,16 +12,17 @@ resource "kubernetes_deployment" "app" {
   spec {
     replicas = 1
 
-    // if persistent volume configured, will have to make sure 
-    // only up to one pod present (and attach to volume) at any given time
-    // therefore have to use Recreate
-    dynamic "strategy" {
-      for_each = length(var.persistent_volume_mount_path_secret_name_list) > 0 ? [true] : []
-      
-      content {
-        type = "Recreate"
-        rolling_update = null
-      }
+    # You cannot update strategy from RollingUpdate -> Recreate
+    # because strategy.rolling_update is invalid when strategy.type = Recreate
+    # however, when initially is RollingUpdate, content of strategy.rolling_update
+    # is stored as block on K8. To remove strategy.rolling_update, we need to set it to null (https://github.com/kubernetes/kubernetes/issues/24198)
+    # However, terraform's validator will not allow us to do so, and will throw
+    # error saying it requires a block. Therefore, as a workaround, we need to 
+    # destroy the resource first, then create it manually in terraform
+    strategy {
+      // if persistent volume configured, will have to use `Recreate` type: 
+      // because persistent volume requires only up to one pod present (and attach to volume) at any given time
+      type = length(var.persistent_volume_mount_path_secret_name_list) > 0 ? "Recreate" : "RollingUpdate"
     }
 
     selector {
