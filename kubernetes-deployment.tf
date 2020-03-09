@@ -113,6 +113,8 @@ resource "kubernetes_deployment" "app" {
               // volume_mount.value refers to aws ssm resource
               // in order to get the value stored in aws ssm resource, you need to second `.value`
               mount_path = volume_mount.value.value
+              
+              name = volume_mount.key == 0 ? "${var.app_label}-volume" : "${var.app_label}-volume-${volume_mount.key}"
             } 
           }
         }
