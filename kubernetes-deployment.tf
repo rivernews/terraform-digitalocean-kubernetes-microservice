@@ -12,6 +12,13 @@ resource "kubernetes_deployment" "app" {
   spec {
     replicas = 1
 
+    // if persistent volume configured, will have to make sure 
+    // only up to one pod present (and attach to volume) at any given time
+    // therefore have to use Recreate
+    strategy {
+      type = length(var.persistent_volume_mount_path_secret_name_list) > 0 ? "Recreate" : "RollingUpdate"
+    }
+
     selector {
       match_labels = {
         app = var.app_label
