@@ -6,7 +6,7 @@
 #
 # tf doc: https://www.terraform.io/docs/providers/kubernetes/r/persistent_volume_claim.html
 resource "kubernetes_persistent_volume_claim" "app_digitalocean_pvc" {
-  count = var.persistent_volume_mount_path_secret_name != "" ? 1 : 0
+  count = length(var.persistent_volume_mount_path_secret_name_list)
 
   metadata {
     # for digitalocean - must be lowercase alphanumeric values and dashes (hyphen) only

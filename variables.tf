@@ -70,9 +70,9 @@ variable "kubernetes_cron_jobs" {
   type    = list
 }
 
-variable "persistent_volume_mount_path_secret_name" {
-  default = ""
-  type    = string
+variable "persistent_volume_mount_path_secret_name_list" {
+  default = []
+  type    = list
 }
 
 variable "environment_variables" {

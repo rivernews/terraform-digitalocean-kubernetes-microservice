@@ -105,6 +105,16 @@ resource "kubernetes_deployment" "app" {
           #     initial_delay_seconds = 3
           #     period_seconds        = 3
           #   }
+
+          dynamic "volume_mount" {
+            for_each = data.aws_ssm_parameter.persistent_volume_mount_path
+            content {
+              // volume_mount.key refers to array index, since `data.aws_ssm_parameter.persistent_volume_mount_path` is an array
+              // volume_mount.value refers to aws ssm resource
+              // in order to get the value stored in aws ssm resource, you need to second `.value`
+              mount_path = volume_mount.value.value
+            } 
+          }
         }
         
         # persistent volume setup
@@ -150,8 +160,8 @@ locals {
 }
 
 data "aws_ssm_parameter" "persistent_volume_mount_path" {
-  count = var.persistent_volume_mount_path_secret_name != "" ? 1 : 0
-  name = var.persistent_volume_mount_path_secret_name
+  count = length(var.persistent_volume_mount_path_secret_name_list)
+  name = var.persistent_volume_mount_path_secret_name_list[count.index]
 }
 
 data "aws_ssm_parameter" "app_credentials" {
