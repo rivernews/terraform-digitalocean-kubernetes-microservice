@@ -22,7 +22,7 @@ resource "kubernetes_deployment" "app" {
     strategy {
       // if persistent volume configured, will have to use `Recreate` type: 
       // because persistent volume requires only up to one pod present (and attach to volume) at any given time
-      type = length(var.persistent_volume_mount_path_secret_name_list) > 0 ? "Recreate" : "RollingUpdate"
+      type = var.use_recreate_deployment_strategy || length(var.persistent_volume_mount_path_secret_name_list) > 0 ? "Recreate" : "RollingUpdate"
     }
 
     selector {
