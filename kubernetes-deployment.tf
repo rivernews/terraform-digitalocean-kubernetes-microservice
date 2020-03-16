@@ -129,6 +129,16 @@ resource "kubernetes_deployment" "app" {
               name = volume_mount.key == 0 ? "${var.app_label}-volume" : "${var.app_label}-volume-${volume_mount.key}"
             } 
           }
+
+          # share host memory mounting at /dev/shm
+          dynamic "volume_mount" {
+            for_each = var.share_host_memory ? [true] : []
+            content {
+              # refer to the volume name
+              name = "share-host-memory"
+              mount_path = "/dev/shm"
+            }
+          }
         }
         
         # persistent volume setup
@@ -156,7 +166,17 @@ resource "kubernetes_deployment" "app" {
             }
         }
 
-
+        # share host memory mounting at /dev/shm
+        # https://stackoverflow.com/a/46434614/9814131
+        dynamic "volume" {
+          for_each = var.share_host_memory ? [true] : []
+          content {
+            name = "share-host-memory"
+            empty_dir {
+              medium = "Memory"
+            }
+          }
+        }
       }
     }
   }

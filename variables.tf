@@ -81,6 +81,12 @@ variable "persistent_volume_mount_path_secret_name_list" {
   type    = list
 }
 
+variable "share_host_memory" {
+  description = "Share host memory by using host mount path on `/dev/shm`, useful when running containers that require a larger startup memory (default is 64M), e.g. selenium webdriver"
+  default = false
+  type = bool
+}
+
 variable "environment_variables" {
   default = {}
   type    = map
