@@ -23,5 +23,13 @@ resource "kubernetes_service" "app" {
       # the port where your application is running on the container
       target_port = var.app_exposed_port
     }
+
+    dynamic "port" {
+      for_each = var.additional_exposed_ports
+      content {
+        port = port.value
+        target_port = port.value
+      }
+    }
   }
 }

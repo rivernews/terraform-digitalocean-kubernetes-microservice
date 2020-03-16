@@ -37,7 +37,13 @@ variable "app_label" {
 }
 
 variable "app_exposed_port" {
-  description = "Unique port within Kubernetes cluster for ingress to direct external traffix to the microservice"
+  description = "Unique port within Kubernetes cluster for ingress to direct external traffic to the microservice"
+}
+
+variable "additional_exposed_ports" {
+  description = "Unique ports within Kubernetes cluster for internal traffic routing to the microservice. Note that this is not for external traffic - for such case please use `app_exposed_port` instead"
+  type = list
+  default = []
 }
 
 variable "app_container_image" {

@@ -20,6 +20,10 @@ output "microservice_kubernetes_service_port" {
   value = var.app_exposed_port
 }
 
+output "microservice_additional_internal_port" {
+  value = var.additional_exposed_ports
+}
+
 output "microservice_namespace" {
   value = "${kubernetes_service_account.app.metadata.0.namespace}"
 }

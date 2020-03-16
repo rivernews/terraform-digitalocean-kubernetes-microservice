@@ -57,16 +57,15 @@ resource "kubernetes_deployment" "app" {
 
           port {
             container_port = var.app_exposed_port
-            # name = "http"
           }
 
-          #   dynamic "env" {
-          #     for_each = "${local.app_secret_key_value_pairs}"
-          #     content {
-          #       name  = "${env.key}"
-          #       value = "${env.value}"
-          #     }
-          #   }
+          # additional exposed ports for internal traffic
+          dynamic "port" {
+            for_each = var.additional_exposed_ports
+            content {
+              container_port = port.value
+            }
+          }
 
           dynamic "env" {
               for_each = var.environment_variables
