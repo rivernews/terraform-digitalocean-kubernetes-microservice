@@ -14,8 +14,7 @@ resource "kubernetes_service" "app" {
     }
 
     port {
-      #    name = "http"
-      #    protocol    = "TCP"
+      name = "primary-port-${var.app_exposed_port}"
 
       # make this service visible to other services by this port; https://stackoverflow.com/a/49982009/9814131
       port        = var.app_exposed_port 
@@ -27,6 +26,7 @@ resource "kubernetes_service" "app" {
     dynamic "port" {
       for_each = var.additional_exposed_ports
       content {
+        name = "additional-port-${port.key}"
         port = port.value
         target_port = port.value
       }
