@@ -1,3 +1,4 @@
+# https://www.terraform.io/docs/providers/kubernetes/r/service.html#port
 resource "kubernetes_service" "app" {
   metadata {
     name      = "${var.app_label}-service"
@@ -14,7 +15,8 @@ resource "kubernetes_service" "app" {
     }
 
     port {
-      name = "primary-port-${var.app_exposed_port}"
+      # must specify name when having multiple ports
+      name = "port-${var.app_exposed_port}"
 
       # make this service visible to other services by this port; https://stackoverflow.com/a/49982009/9814131
       port        = var.app_exposed_port 
@@ -26,7 +28,7 @@ resource "kubernetes_service" "app" {
     dynamic "port" {
       for_each = var.additional_exposed_ports
       content {
-        name = "additional-port-${port.key}"
+        name = "port-${port.key}"
         port = port.value
         target_port = port.value
       }

@@ -56,7 +56,8 @@ resource "kubernetes_deployment" "app" {
           image_pull_policy = "Always"
 
           port {
-            name = "primary-port-${var.app_exposed_port}"
+            # must specify name when having multiple ports
+            name = "port-${var.app_exposed_port}"
             container_port = var.app_exposed_port
             host_port = var.app_exposed_port
           }
@@ -65,7 +66,7 @@ resource "kubernetes_deployment" "app" {
           dynamic "port" {
             for_each = var.additional_exposed_ports
             content {
-              name = "additional-port-${port.key}"
+              name = "port-${port.key}"
               container_port = port.value
               host_port = port.value
             }
