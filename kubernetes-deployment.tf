@@ -97,16 +97,25 @@ resource "kubernetes_deployment" "app" {
               value = join(",", var.cors_domain_whitelist)
           }
 
-          #   resources {
-          #     limits {
-          #       cpu    = "0.5"
-          #       memory = "512Mi"
-          #     }
-          #     requests {
-          #       cpu    = "250m"
-          #       memory = "50Mi"
-          #     }
+          dynamic "resources" {
+            for_each = var.memory_max_allowed != "" ? [true] : []
+            content {
+              limits {
+                memory = var.memory_max_allowed
+              }
+            }
+          }
+
+          # resources {
+          #   limits {
+          #     cpu    = "0.5"
+          #     memory = "512Mi"
           #   }
+          # requests {
+          #   cpu    = "250m"
+          #   memory = "50Mi"
+          # }
+          # }
 
           #   liveness_probe {
           #     http_get {

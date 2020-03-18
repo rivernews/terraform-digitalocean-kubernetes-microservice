@@ -87,6 +87,12 @@ variable "share_host_memory" {
   type = bool
 }
 
+variable "memory_max_allowed" {
+  description = "If specified, will use it to set memory limit on deployment"
+  default = ""
+  type = string
+}
+
 variable "environment_variables" {
   default = {}
   type    = map
