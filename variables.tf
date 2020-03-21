@@ -88,7 +88,13 @@ variable "share_host_memory" {
 }
 
 variable "memory_max_allowed" {
-  description = "If specified, will use it to set memory limit on deployment"
+  description = "Set memory limit on deployment. Needs to be used with `memory_guaranteed` otherwise no effect."
+  default = ""
+  type = string
+}
+
+variable "memory_guaranteed" {
+  description = "Set memory guarantee on deployment. Needs to be used with `memory_max_allowed` otherwise no effect."
   default = ""
   type = string
 }
