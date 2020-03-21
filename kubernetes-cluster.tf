@@ -6,7 +6,8 @@ provider "digitalocean" {
   token   = data.aws_ssm_parameter.digitalocean_token.value
 
   # version changelog: https://github.com/terraform-providers/terraform-provider-digitalocean/blob/master/CHANGELOG.md
-  version = "~> 1.11"
+  # version = "~> 1.11"
+  version = "1.15.1"
 }
 
 data "digitalocean_kubernetes_cluster" "for_app" {
@@ -31,7 +32,8 @@ provider "kubernetes" {
   # related merge request: https://github.com/terraform-providers/terraform-provider-kubernetes/pull/690
 
   # all k8 provider versions: https://github.com/terraform-providers/terraform-provider-kubernetes/blob/master/CHANGELOG.md
-  version = "1.9"
+  # version = "1.9"
+  version = "1.11.1"
 
   host = data.digitalocean_kubernetes_cluster.for_app.endpoint
 
