@@ -59,7 +59,7 @@ resource "kubernetes_deployment" "app" {
             # must specify name when having multiple ports
             name = "port-${var.app_exposed_port}"
             container_port = var.app_exposed_port
-            host_port = var.app_exposed_port
+            # host_port = var.app_exposed_port
           }
 
           # additional exposed ports for internal traffic
@@ -68,7 +68,7 @@ resource "kubernetes_deployment" "app" {
             content {
               name = "port-${port.key}"
               container_port = port.value
-              host_port = port.value
+              # host_port = port.value
             }
           }
 
