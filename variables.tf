@@ -32,6 +32,12 @@ variable "cluster_name" {
   description = "The name of the Kubernetes cluster to deploy microservice on. This is a generic property, not a vendor-specific one."
 }
 
+variable "node_pool_name" {
+  description = "The name of a node pool that you'd like the deployment to provision pods on"
+  type = string
+  default = ""
+}
+
 variable "app_label" {
   description = "A label for the microservice that will be used to prefix and suffix resources"
 }

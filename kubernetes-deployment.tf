@@ -39,6 +39,8 @@ resource "kubernetes_deployment" "app" {
       }
 
       spec {
+        # This is used only when you want to set to `false`; see 
+        # https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#use-the-default-service-account-to-access-the-api-server
         # automount_service_account_token = true
 
         service_account_name = kubernetes_service_account.app.metadata.0.name
@@ -194,6 +196,10 @@ resource "kubernetes_deployment" "app" {
             }
           }
         }
+
+        node_selector = var.node_pool_name != "" ? {
+          "doks.digitalocean.com/node-pool" = var.node_pool_name
+        } : {}
       }
     }
   }
