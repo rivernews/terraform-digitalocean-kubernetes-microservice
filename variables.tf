@@ -38,6 +38,12 @@ variable "node_pool_name" {
   default = ""
 }
 
+variable "scale" {
+  description = "The number of replica"
+  type = number
+  default = 1
+}
+
 variable "app_label" {
   description = "A label for the microservice that will be used to prefix and suffix resources"
 }

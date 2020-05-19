@@ -10,7 +10,7 @@ resource "kubernetes_deployment" "app" {
   }
 
   spec {
-    replicas = 1
+    replicas = var.scale
 
     # You cannot update strategy from RollingUpdate -> Recreate
     # because strategy.rolling_update is invalid when strategy.type = Recreate
@@ -38,7 +38,29 @@ resource "kubernetes_deployment" "app" {
         }
       }
 
+      # pod spec
       spec {
+        # ensure that each replica does not co-locate on a single node
+        # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#more-practical-use-cases
+        affinity {
+          pod_anti_affinity {
+            required_during_scheduling_ignored_during_execution {
+              label_selector {
+                match_expressions {
+                  key = "app"
+                  operator = "In"
+                  values = [var.app_label]
+                }
+              }
+              topology_key = "kubernetes.io/hostname"
+            }
+          }
+        }
+
+        node_selector = var.node_pool_name != "" ? {
+          "doks.digitalocean.com/node-pool" = var.node_pool_name
+        } : {}
+
         # This is used only when you want to set to `false`; see 
         # https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#use-the-default-service-account-to-access-the-api-server
         # automount_service_account_token = true
@@ -196,10 +218,6 @@ resource "kubernetes_deployment" "app" {
             }
           }
         }
-
-        node_selector = var.node_pool_name != "" ? {
-          "doks.digitalocean.com/node-pool" = var.node_pool_name
-        } : {}
       }
     }
   }
