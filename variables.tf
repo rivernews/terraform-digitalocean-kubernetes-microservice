@@ -111,6 +111,12 @@ variable "memory_guaranteed" {
   type = string
 }
 
+variable "enable_docker_socket" {
+  description = "This will mount docker socket so that the container have access to docker engine. Note: you still have to install docker client in the pod / image. This assumes the kubernetes provider uses docker as container engine - which may not always be the case, there're other types of containerization tool. If the k8s provider does not use docker, this monuting will fail."
+  default = false
+  type = bool
+}
+
 variable "environment_variables" {
   default = {}
   type    = map

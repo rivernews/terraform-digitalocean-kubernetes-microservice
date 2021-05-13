@@ -180,6 +180,35 @@ resource "kubernetes_deployment" "app" {
               mount_path = "/dev/shm"
             }
           }
+
+          # docker socket mounting
+          dynamic "volume_mount" {
+            for_each = var.enable_docker_socket ? [true] : []
+            content {
+              # refer to the volume name
+              name = "docker-socket"
+              mount_path = "/var/run/docker.sock"
+              read_only = false
+            }
+          }
+          dynamic "volume_mount" {
+            for_each = var.enable_docker_socket ? [true] : []
+            content {
+              # refer to the volume name
+              name = "docker-directory"
+              mount_path = "/var/lib/docker"
+              read_only = false
+            }
+          }
+          dynamic "security_context" {
+            for_each = var.enable_docker_socket ? [true] : []
+            content {
+              # refer to the volume name
+              privileged = true
+              run_as_user = 0
+            }
+          }
+
         }
         
         # persistent volume setup
@@ -215,6 +244,27 @@ resource "kubernetes_deployment" "app" {
             name = "share-host-memory"
             empty_dir {
               medium = "Memory"
+            }
+          }
+        }
+
+        # docker socket mounting
+        dynamic "volume" {
+          for_each = var.enable_docker_socket ? [true] : []
+          content {
+            name = "docker-socket"
+            host_path {
+              path = "/var/run/docker.sock"
+              type = "File"
+            }
+          }
+        }
+        dynamic "volume" {
+          for_each = var.enable_docker_socket ? [true] : []
+          content {
+            name = "docker-directory"
+            host_path {
+              path = "/var/lib/docker"
             }
           }
         }
