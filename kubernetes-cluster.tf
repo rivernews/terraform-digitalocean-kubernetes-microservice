@@ -31,8 +31,8 @@ provider "kubernetes" {
   # related merge request: https://github.com/terraform-providers/terraform-provider-kubernetes/pull/690
 
   # all k8 provider versions: https://github.com/terraform-providers/terraform-provider-kubernetes/blob/master/CHANGELOG.md
-  # version = "1.9"
-  version = "1.11.1"
+  # make sure you update the tf kubernetes provider version in repo iriversland2-kubernetes as well
+  version = "1.13.3"
 
   host = data.digitalocean_kubernetes_cluster.for_app.endpoint
 
@@ -43,9 +43,9 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(
     data.digitalocean_kubernetes_cluster.for_app.kube_config[0].cluster_ca_certificate
   )
-  
+
   # adding this block to resolve tf error: `<a k8 resource> is forbidden: User "system:anonymous cannot create resource "<a k8 resource>" in API group "" at the cluster scope`
   # client_certificate     = data.digitalocean_kubernetes_cluster.for_app.kube_config[0].client_certificate
   # client_key             = data.digitalocean_kubernetes_cluster.for_app.kube_config[0].client_key
-  
+
 }
