@@ -18,7 +18,12 @@ resource "kubernetes_persistent_volume_claim" "app_digitalocean_pvc" {
 
     resources {
       requests = {
-        storage = "1Gi" # changing the storage value in the resource definition after the volume has been created will have no effect
+        # Changing the storage value in the resource definition after the volume has been created will have no effect
+        # To expand the volume (cannot decrease volume size), you can run something like:
+        # `kubectl patch pvc code-server-persistent-volume-claim -p '{ "spec": { "resources": { "requests": { "storage": "4Gi" }}}}' --namespace code-server`
+        # See details:
+        # https://docs.digitalocean.com/products/kubernetes/how-to/add-volumes/
+        storage = "1Gi" 
       }
     }
 
