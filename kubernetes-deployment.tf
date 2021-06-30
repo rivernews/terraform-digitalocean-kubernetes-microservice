@@ -43,16 +43,44 @@ resource "kubernetes_deployment" "app" {
         # ensure that each replica does not co-locate on a single node
         # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#more-practical-use-cases
         affinity {
-          pod_anti_affinity {
-            required_during_scheduling_ignored_during_execution {
-              label_selector {
-                match_expressions {
-                  key = "app"
-                  operator = "In"
-                  values = [var.app_label]
+          dynamic "pod_anti_affinity" {
+            # In normal cases, we want pods to schedule on different nodes (so no 2 pods running on a same node) - because deployment is usually a service not batch job;
+            # but if volume mount configured, do not spead, since PVC can only stick to one node
+            for_each = length(var.persistent_volume_mount_setting_list) > 0 ? [] : [true]
+            content {
+              required_during_scheduling_ignored_during_execution {
+                label_selector {
+                  match_expressions {
+                    key = "app"
+                    operator = "In"
+                    values = [var.app_label]
+                  }
                 }
+                topology_key = "kubernetes.io/hostname"
               }
-              topology_key = "kubernetes.io/hostname"
+            }
+          }
+
+          dynamic "pod_affinity" {
+            # If volume mount configured, enforce to schedule pods on the node already running this deployment's pod
+            # i.e., let pods of this deployment "stick to each other" on a same node
+            # This will *mitigate* the issue when using PVC with Deployment - once PVC attached to a pod, it also exclusively
+            # attaches to the node as well; while PVC can detach/attach to new pod, seems it cannot detach from node
+            # TODO: complete solution: change to use StatefulSet instead when PVC is needed
+            # Relevant issue:
+            # https://github.com/kubernetes/kubernetes/issues/53059
+            for_each = length(var.persistent_volume_mount_setting_list) > 0 ? [true] : []
+            content {
+              required_during_scheduling_ignored_during_execution {
+                label_selector {
+                  match_expressions {
+                    key = "app"
+                    operator = "In"
+                    values = [var.app_label]
+                  }
+                }
+                topology_key = "kubernetes.io/hostname"
+              }
             }
           }
         }
