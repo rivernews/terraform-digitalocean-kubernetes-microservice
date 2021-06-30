@@ -90,10 +90,10 @@ variable "kubernetes_cron_jobs" {
 
 variable "persistent_volume_mount_setting_list" {
   default = []
-  type    = object({
+  type    = list(object({
     mount_path_secret_name = string
     size = string # e.g. 1Gi
-  })
+  }))
 }
 
 variable "share_host_memory" {
