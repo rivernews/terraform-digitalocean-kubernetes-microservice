@@ -104,13 +104,13 @@ variable "share_host_memory" {
 
 variable "memory_max_allowed" {
   description = "Set memory limit on deployment. Needs to be used with `memory_guaranteed` otherwise no effect."
-  default = ""
+  default = "512Mi"
   type = string
 }
 
 variable "memory_guaranteed" {
   description = "Set memory guarantee on deployment. Needs to be used with `memory_max_allowed` otherwise no effect."
-  default = ""
+  default = "256Mi"
   type = string
 }
 
