@@ -11,7 +11,7 @@ This module currently assumes the use of Digitalocean Kubernetes Service. Howeve
 Regradless of which Kubernetes vendor you use, this terraform module assumes you provisioned a Kubernetes cluster already - so this means that you are required to have an existing K8 cluster, or at least terraform scripts that provision them. If you're not using digitalocean as your K8 cluster provider and using other kubernetes cluster vendor, you will modify `kubernetes-cluster.tf`, so that `local_file.kubeconfig` will generate the right `kubeconfig.yaml`.
 
 ### AWS - credential management using AWS parameter store
-This module assumes you use AWS parameter store for credential management. As such, you will have to provide your AWS account credentials through the three variable inputs: 
+This module assumes you use AWS parameter store for credential management. As such, you will have to provide your AWS account credentials through the three variable inputs:
 
 ```
 variable "aws_access_key" {}
@@ -55,34 +55,34 @@ An example of using this terraform module:
 module "slack_middleware_service" {
   source  = "rivernews/kubernetes-microservice/digitalocean"
   version = "0.0.2"
-  
+
   # credential management
   aws_region     = "${You will have to provide this}"
   aws_access_key = "${You will have to provide this}"
   aws_secret_key = "${You will have to provide this}"
-  
+
   # cluster-wise config (shared resources across different microservices)
   cluster_name = "${YOUR_CLUSTER_NAME_NEEDS_TO_BE_HERE}"
 
   # app-specific config (microservice)
-  
+
   # this label will be added and used as prefix to related resources
   app_label               = "slack-middleware-service"
-  
+
   # we assume your ingress controller use `ClusterIP` mode, so make sure there aren't any service using this port within your kubernetes cluster
   app_exposed_port        = 8002
 
-  # (optional) if you want your microservice to be accessed from externa traffic by `https` connection, 
+  # (optional) if you want your microservice to be accessed from externa traffic by `https` connection,
   # specify a domain name that is covered by your wilcard certificate.
   # also make sure you have externalDns resource to provision the new domain name for you.
-  # In case you don't have a certificate, if your ingress resource does not 
+  # In case you don't have a certificate, if your ingress resource does not
   # force or redirect to ssl, you can still use it will `http` connection
   app_deployed_domain     = "slack.api.shaungc.com"
 
   # (optional) if you provide any in the whitelist, they will be joined
   # by a comma, and serve as environment variable `CORS_DOMAIN_WHITELIST`
   cors_domain_whitelist   = []
-  
+
   # the docker image your microservice will be spinning up
   app_container_image     = "shaungc/slack-middleware-service"
 
@@ -102,13 +102,13 @@ module "slack_middleware_service" {
     "/app/slack-middleware-service/SLACK_TOKEN_INCOMING_URL",
     "/app/slack-middleware-service/TRAVIS_TOKEN"
   ]
-  
+
   # (optional) you can also pass in addtional environment variables to the microservice
   # container in runtime:
   environment_variables = {
     ELASTICSEARCH_PORT = local.elasticsearch_port
   }
-  
+
   # (optional) you can also specify cronjob that will be scheduled alongside
   # with your microservice, e.g., backup db job, or other maintenance work
   kubernetes_cron_jobs = [
@@ -118,7 +118,13 @@ module "slack_middleware_service" {
       command = ["/bin/sh", "-c", "echo Starting cron job... && sleep 5 && cd /usr/src/backend && echo Finish CD && python manage.py backup_db && echo Finish dj command"]
     },
   ]
-  
+
+  # (optional) create and attach volume(s)
+  persistent_volume_mount_setting_list = [{
+    mount_path_secret_name = "/ssm/parameter/path" # provides the path which volume is mounted at in the app container, this will create a volume on DigitalOcean for you.
+    size = "1Gi" # you can change this at a later point to increase size, but not decrease
+  }]
+
   # (optional) you may use this to signal terraform to be aware of dependencies
   # so that resources are created in your desired order
   depend_on = [

@@ -17,12 +17,12 @@ resource "kubernetes_deployment" "app" {
     # however, when initially is RollingUpdate, content of strategy.rolling_update
     # is stored as block on K8. To remove strategy.rolling_update, we need to set it to null (https://github.com/kubernetes/kubernetes/issues/24198)
     # However, terraform's validator will not allow us to do so, and will throw
-    # error saying it requires a block. Therefore, as a workaround, we need to 
+    # error saying it requires a block. Therefore, as a workaround, we need to
     # destroy the resource first, then create it manually in terraform
     strategy {
-      // if persistent volume configured, will have to use `Recreate` type: 
+      // if persistent volume configured, will have to use `Recreate` type:
       // because persistent volume requires only up to one pod present (and attach to volume) at any given time
-      type = var.use_recreate_deployment_strategy || length(var.persistent_volume_mount_path_secret_name_list) > 0 ? "Recreate" : "RollingUpdate"
+      type = var.use_recreate_deployment_strategy || length(var.persistent_volume_mount_setting_list) > 0 ? "Recreate" : "RollingUpdate"
     }
 
     selector {
@@ -61,7 +61,7 @@ resource "kubernetes_deployment" "app" {
           "doks.digitalocean.com/node-pool" = var.node_pool_name
         } : {}
 
-        # This is used only when you want to set to `false`; see 
+        # This is used only when you want to set to `false`; see
         # https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#use-the-default-service-account-to-access-the-api-server
         # automount_service_account_token = true
 
@@ -166,9 +166,9 @@ resource "kubernetes_deployment" "app" {
               // volume_mount.value refers to aws ssm resource
               // in order to get the value stored in aws ssm resource, you need to second `.value`
               mount_path = volume_mount.value.value
-              
+
               name = volume_mount.key == 0 ? "${var.app_label}-volume" : "${var.app_label}-volume-${volume_mount.key}"
-            } 
+            }
           }
 
           # share host memory mounting at /dev/shm
@@ -210,7 +210,7 @@ resource "kubernetes_deployment" "app" {
           }
 
         }
-        
+
         # persistent volume setup
         # based on https://www.digitalocean.com/docs/kubernetes/how-to/add-volumes/
         dynamic "init_container" {
@@ -285,8 +285,8 @@ locals {
 }
 
 data "aws_ssm_parameter" "persistent_volume_mount_path" {
-  count = length(var.persistent_volume_mount_path_secret_name_list)
-  name = var.persistent_volume_mount_path_secret_name_list[count.index]
+  count = length(var.persistent_volume_mount_setting_list)
+  name = var.persistent_volume_mount_setting_list[count.index].mount_path_secret_name
 }
 
 data "aws_ssm_parameter" "app_credentials" {

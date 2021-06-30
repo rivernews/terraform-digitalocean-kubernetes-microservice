@@ -6,7 +6,7 @@
 #
 # tf doc: https://www.terraform.io/docs/providers/kubernetes/r/persistent_volume_claim.html
 resource "kubernetes_persistent_volume_claim" "app_digitalocean_pvc" {
-  count = length(var.persistent_volume_mount_path_secret_name_list)
+  count = length(var.persistent_volume_mount_setting_list)
 
   metadata {
     # for digitalocean - must be lowercase alphanumeric values and dashes (hyphen) only
@@ -23,18 +23,12 @@ resource "kubernetes_persistent_volume_claim" "app_digitalocean_pvc" {
         # `kubectl patch pvc code-server-persistent-volume-claim -p '{ "spec": { "resources": { "requests": { "storage": "4Gi" }}}}' --namespace code-server`
         # See details:
         # https://docs.digitalocean.com/products/kubernetes/how-to/add-volumes/
-        storage = "1Gi" 
+        storage = var.persistent_volume_mount_setting_list[count.index].size
       }
     }
 
     storage_class_name = "do-block-storage"
   }
-
-  # no need to delete pvc, tf will clean up for you
-#   provisioner "local-exec" {
-#     when    = "destroy"
-#     command = "kubectl --kubeconfig ${path.module}/kubeconfig.yaml delete pvc -n ${kubernetes_service_account.app.metadata.0.namespace} ${var.app_label}-persistent-volume-claim"
-#   }
 
   depends_on = [
     local_file.kubeconfig
