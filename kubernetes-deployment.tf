@@ -283,7 +283,7 @@ resource "kubernetes_deployment" "app" {
             name = "docker-socket"
             host_path {
               path = "/var/run/docker.sock"
-              type = "File"
+              type = "Socket"
             }
           }
         }
