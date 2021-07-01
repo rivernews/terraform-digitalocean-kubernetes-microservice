@@ -138,4 +138,5 @@ variable "docker_registry_url" {
 variable "use_recreate_deployment_strategy" {
   default = false
   type = bool
+  description = "If enabled, will use Recreate; otherwise use RollingUpdate"
 }
