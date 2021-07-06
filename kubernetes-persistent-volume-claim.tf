@@ -30,7 +30,4 @@ resource "kubernetes_persistent_volume_claim" "app_digitalocean_pvc" {
     storage_class_name = "do-block-storage"
   }
 
-  depends_on = [
-    local_file.kubeconfig
-  ]
 }

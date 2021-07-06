@@ -6,13 +6,6 @@ data "digitalocean_kubernetes_cluster" "for_app" {
     name = var.cluster_name
 }
 
-resource "local_file" "kubeconfig" {
-    sensitive_content     = data.digitalocean_kubernetes_cluster.for_app.kube_config.0.raw_config
-    # filename = "${path.module}/kubeconfig.yaml"
-    filename = "kubeconfig.yaml"
-}
-
-
 provider "kubernetes" {
   # Resolve Error: Unauthorized issue
   # suggested config: https://stackoverflow.com/a/58955100/9814131
