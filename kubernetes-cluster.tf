@@ -2,13 +2,6 @@ data "aws_ssm_parameter" "digitalocean_token" {
   name = var.aws_ssm_parameter__digitalocean_token
 }
 
-provider "digitalocean" {
-  token   = data.aws_ssm_parameter.digitalocean_token.value
-
-  # version changelog: https://github.com/digitalocean/terraform-provider-digitalocean/blob/master/CHANGELOG.md
-  version = "1.22.2"
-}
-
 data "digitalocean_kubernetes_cluster" "for_app" {
     name = var.cluster_name
 }
