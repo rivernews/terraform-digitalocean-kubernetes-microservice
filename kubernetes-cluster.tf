@@ -19,10 +19,6 @@ provider "kubernetes" {
   # suggested cli: https://github.com/terraform-providers/terraform-provider-kubernetes/issues/679#issuecomment-552119320
   # related merge request: https://github.com/terraform-providers/terraform-provider-kubernetes/pull/690
 
-  # all k8 provider versions: https://github.com/terraform-providers/terraform-provider-kubernetes/blob/master/CHANGELOG.md
-  # make sure you update the tf kubernetes provider version in repo iriversland2-kubernetes as well
-  version = "1.13.3"
-
   host = data.digitalocean_kubernetes_cluster.for_app.endpoint
 
   load_config_file = false
