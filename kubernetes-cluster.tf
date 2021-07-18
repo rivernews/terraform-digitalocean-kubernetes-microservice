@@ -14,8 +14,6 @@ provider "kubernetes" {
 
   host = data.digitalocean_kubernetes_cluster.for_app.endpoint
 
-  load_config_file = false
-
   token = data.digitalocean_kubernetes_cluster.for_app.kube_config[0].token
 
   cluster_ca_certificate = base64decode(
