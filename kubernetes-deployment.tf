@@ -152,10 +152,10 @@ resource "kubernetes_deployment" "app" {
           dynamic "resources" {
             for_each = var.memory_max_allowed != "" && var.memory_guaranteed != "" ? [true] : []
             content {
-              requests {
+              requests = {
                 memory = var.memory_guaranteed
               }
-              limits {
+              limits = {
                 memory = var.memory_max_allowed
               }
             }
