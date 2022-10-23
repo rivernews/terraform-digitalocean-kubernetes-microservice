@@ -13,7 +13,7 @@ locals {
 # template copied from terraform official doc: https://www.terraform.io/docs/providers/kubernetes/r/ingress.html
 # modified based on SO answer: https://stackoverflow.com/a/55968709/9814131
 # TODO: change name `project-ingress-resource` to `app`
-resource "kubernetes_ingress" "app" {
+resource "kubernetes_ingress_v1" "app" {
   count = var.app_deployed_domain != "" ? 1 : 0
 
   metadata {
@@ -51,7 +51,7 @@ resource "kubernetes_ingress" "app" {
     #   hosts       = var.tls_cert_covered_domain_list
       hosts       = local.deployed_domain_list
 
-      # not specifying a secret name will let the k8 cluster's ingress controller 
+      # not specifying a secret name will let the k8 cluster's ingress controller
       # use default-ssl-certificate, if it is configured
     #   secret_name = var.cert_cluster_issuer_k8_secret_name
     }
@@ -67,8 +67,12 @@ resource "kubernetes_ingress" "app" {
         http {
           path {
             backend {
-              service_name = kubernetes_service.app.metadata.0.name
-              service_port = var.app_exposed_port
+              service {
+                name = kubernetes_service.app.metadata.0.name
+                port {
+                  number = var.app_exposed_port
+                }
+              }
             }
 
             path = "/"
