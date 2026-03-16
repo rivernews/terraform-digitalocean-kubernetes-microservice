@@ -1,6 +1,6 @@
 # tf spec: https://www.terraform.io/docs/providers/kubernetes/r/cron_job.html
 # k8 spec: https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/
-resource "kubernetes_cron_job" "simple_cmd_job" {
+resource "kubernetes_cron_job_v1" "simple_cmd_job" {
   count = length(var.kubernetes_cron_jobs)
 
   metadata {

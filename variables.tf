@@ -140,3 +140,8 @@ variable "use_recreate_deployment_strategy" {
   type = bool
   description = "If enabled, will use Recreate; otherwise use RollingUpdate"
 }
+
+variable force_ssl_refirect {
+  type = bool
+  default = true
+}
