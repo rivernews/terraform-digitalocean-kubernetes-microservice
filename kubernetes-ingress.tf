@@ -43,6 +43,7 @@ resource "kubernetes_ingress_v1" "app" {
   }
 
   spec {
+    ingress_class_name = "nginx"
 
     ## adding `tls` block to let ingress controller to secure this ingress (allow 443), but possibly will make http unavailable
     # https://github.com/kubernetes/ingress-nginx/issues/3235#issuecomment-429573596
